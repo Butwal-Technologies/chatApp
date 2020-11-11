@@ -11,6 +11,12 @@ io.on("connection", socket => {
        console.log(msg);
     io.emit("Chat Message", msg);
 });
+
+socket.on("Chat Passenger",msg => {
+    console.log(msg);
+ io.emit("Chat Passenger", msg);
+});
+
 });
 
 
