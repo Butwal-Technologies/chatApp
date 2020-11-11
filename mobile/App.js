@@ -7,7 +7,7 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
+  TextInput,SafeAreaView,
 } from 'react-native';
 
 import {
@@ -27,25 +27,32 @@ class App extends Component {
     this.state ={
       chatMessage:"",
       chatMessages:[],
+      passengerMessage:"",
+      passengerMessages:[]
     };
   }
 
   componentDidMount(){
-     this.socket = io("http://192.168.1.103:3000");
+     this.socket = io("http://192.168.1.115:3000");
      this.socket.on("Chat Message",msg =>{
        this.setState({chatMessages:[...this.state.chatMessages, msg]});
      });
+     this.socket.on("Chat Passenger",msg =>{
+      this.setState({passengerMessages:[...this.state.passengerMessages, msg]});
+    });
   }
 submitChatMessage(){
 this.socket.emit("Chat Message",this.state.chatMessage);
 this.setState({chatMessage:""});
+this.socket.emit("Chat Passenger",this.state.chatMessage);
 }
 
   render(){
   const chatMessages = this.state.chatMessages.map(chatMessage => (<Text key={chatMessage}>{chatMessage}</Text>));
-  
+  const passengerMessages = this.state.passengerMessages.map(chatMessage => (<Text key={chatMessage}>{chatMessage}</Text>));
+
   return (
-        
+        <SafeAreaView>
           <View style={styles.body}>
          <TextInput
          style={{height:40,borderWidth:2}}
@@ -57,8 +64,9 @@ this.setState({chatMessage:""});
          }}
          />
            {chatMessages}
+           {passengerMessages}
           </View>
-      
+          </SafeAreaView>
   );
   }
   }
